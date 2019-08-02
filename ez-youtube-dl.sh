@@ -29,3 +29,6 @@ youtube-dl \
     --output "$OUTDIR%(title)s.%(ext)s" \
     --format 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' \
     "$URL"
+
+echo -e "$OUTDIR%(title)s.%(ext)s"
+open "$OUTDIR"
