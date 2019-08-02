@@ -8,6 +8,8 @@
 # @param URL => a youtube link
 # @param OUTDIR => folder to save the output files
 
+OUTPUT_FILENAME_FORMAT="%(title)s.%(ext)s"
+
 # input URL is required @param
 if [[ -z "$1" ]]; then
     (>&2 echo "ERROR: you must pass a youtube URL")
@@ -20,15 +22,19 @@ fi
 if [[ -d "$2" ]]; then
     OUTDIR="$2"
 else
-    OUTDIR="~/data/youtube_dl/"
+    OUTDIR="$HOME/data/youtube_dl/"
 fi
 
 mkdir -p "$OUTDIR"
 
+# fetch filename for video at a given URL and store it in variable so we have it later
+OUTFILE="$(youtube-dl --get-filename -o "$OUTPUT_FILENAME_FORMAT" "$URL")"
+
 youtube-dl \
-    --output "$OUTDIR%(title)s.%(ext)s" \
+    --output "$OUTDIR$OUTPUT_FILENAME_FORMAT" \
     --format 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' \
     "$URL"
 
-echo -e "$OUTDIR%(title)s.%(ext)s"
-open "$OUTDIR"
+echo -e "$OUTDIR$OUTFILE"
+
+open -R "$OUTDIR$OUTFILE"
